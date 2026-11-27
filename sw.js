@@ -1,5 +1,5 @@
-const CACHE = 'comparador-black-friday-v8-accessibility';
-const FILES = ['./','./index.html','./styles.css?v=8','./app.js?v=8'];
+const CACHE = 'comparador-black-friday-v9-clean';
+const FILES = ['./','./index.html','./styles.css?v=9','./app.js?v=8'];
 self.addEventListener('install', e => {e.waitUntil(caches.open(CACHE).then(c=>c.addAll(FILES)).then(()=>self.skipWaiting()));});
 self.addEventListener('activate', e => {e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('comparador-black-friday-')&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));});
 self.addEventListener('fetch', e => {
