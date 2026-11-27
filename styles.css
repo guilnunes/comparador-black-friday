@@ -48,3 +48,7 @@ summary,.model-picker summary{min-height:max(44px,calc(2.75 * var(--u)));padding
 :root[data-contrast="high"] input:not([type=checkbox]),:root[data-contrast="high"] select{border-color:var(--line)}
 input::placeholder{color:#52615b}
 @media(forced-colors:active){.tabbar a.active{outline:2px solid Highlight}.result,.offer,.form-card,.track,.fill{border:1px solid CanvasText}.fill{background:Highlight}}
+
+/* v9: compact hierarchy, preserve accessibility scale */
+.screen-intro{margin:0 0 14px}.screen-intro h1{margin-bottom:0}.panel>h1{margin:0 0 14px}.menu-list a{padding-block:14px}
+@media(max-width:699px){main{padding-top:14px}h1{font-size:calc(1.375 * var(--u));line-height:1.2;letter-spacing:-.025em}h2{font-size:calc(1.125 * var(--u));line-height:1.25;letter-spacing:-.02em;margin:16px 0 10px}.screen-intro{margin-bottom:12px}.app-header{padding-bottom:6px}.context-strip{padding-block:4px}.form-card{margin-bottom:10px}}
