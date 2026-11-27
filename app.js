@@ -44,8 +44,8 @@ loadFreight();catalog();loadSim();
 if ('serviceWorker' in navigator && location.protocol === 'https:') { navigator.serviceWorker.register('./sw.js').catch(console.warn); }
 
 /* Mobile app navigation. The same DOM retains form state between screens. */
-const screenIds=['loja','catalogo','grafico','frete','mais','simulador','historico','checklist','novas','prioridades'];
-const screenTab=id=>['simulador','historico','checklist','novas','prioridades'].includes(id)?'mais':id;
+const screenIds=['loja','catalogo','grafico','frete','mais','simulador','historico','checklist','novas','prioridades','acessibilidade'];
+const screenTab=id=>['simulador','historico','checklist','novas','prioridades','acessibilidade'].includes(id)?'mais':id;
 function showScreen(id,reset=true){
  if(!screenIds.includes(id))id='loja';
  document.body.classList.add('app-ready');
@@ -56,3 +56,25 @@ function showScreen(id,reset=true){
 function goScreen(id){if(location.hash!=='#'+id)location.hash=id;showScreen(id);}
 window.addEventListener('hashchange',()=>showScreen(location.hash.slice(1)));
 showScreen(location.hash.slice(1),false);
+
+/* Accessibility settings supplement, never overwrite, browser / OS preferences. */
+const accessPrefs=read('fridge-accessibility-v1',{})||{};
+const scales=['1','1.25','1.5','1.75','2'];
+const uiScale=el('uiScale'),highContrast=el('highContrast');
+uiScale.value=scales.includes(String(accessPrefs.scale))?String(accessPrefs.scale):'1';
+highContrast.checked=accessPrefs.contrast===true;
+function applyAccess(save=false){
+ document.documentElement.style.setProperty('--ui-scale',uiScale.value);
+ document.documentElement.dataset.contrast=highContrast.checked?'high':'auto';
+ if(save){const ok=write('fridge-accessibility-v1',{scale:uiScale.value,contrast:highContrast.checked});el('accessStatus').textContent=ok?'Preferências salvas.':'Preferências aplicadas nesta sessão.';}
+}
+uiScale.addEventListener('change',()=>applyAccess(true));highContrast.addEventListener('change',()=>applyAccess(true));applyAccess();
+const tabbar=document.querySelector('.tabbar');
+function fitTabbar(){
+ const height=tabbar.getBoundingClientRect().height;
+ const viewport=window.visualViewport?.height||window.innerHeight;
+ document.body.classList.toggle('nav-in-flow',height>viewport*.35);
+ document.documentElement.style.setProperty('--nav-space',Math.ceil(height+12)+'px');
+}
+if('ResizeObserver' in window)new ResizeObserver(fitTabbar).observe(tabbar);
+window.addEventListener('resize',fitTabbar);window.visualViewport?.addEventListener('resize',fitTabbar);fitTabbar();
